@@ -1,57 +1,101 @@
-# Financial Statement Scraper
+# Financial Statement Scrapers
 
-This repository contains an R script (Main_Script.R) and a trigger script (Trigger.R) that scrape annual financial statement data (income statement, balance sheet, and cash flow) from barchart.com for any given stock ticker.
+This repository contains R scripts to scrape annual financial statement data for publicly listed companies from two sources:
 
-The scraped data is saved as an Excel file with three sheets (IS, BS, Cashflow) under the Data/ folder.
+1. Barchart.com — covers income statement, balance sheet, and cash flow
+2. StockAnalysis.com — provides a more complete balance sheet and additional metrics like ratios
 
-## Files
+Each script saves the results in Excel format with separate sheets for each statement.
 
-- Main_Script.R  
-  Contains the main finscrape() function, which:
-  - Loops over income statement, balance sheet, and cash flow pages (up to two pages each)
-  - Scrapes and cleans the financial data
-  - Joins multi-page data by the Metric column
-  - Exports the final data into an Excel file with three sheets (using writexl)
+------------------------------------------------------------
+Scripts
+------------------------------------------------------------
 
-- Trigger.R  
-  Defines the ticker (stock symbol) and runs the finscrape() function.
+##. Main_Script.R
 
-## Requirements
+Scrapes financial data from Barchart.com for a given ticker.
 
-You need the following R packages:
+- Income Statement
+- Balance Sheet
+- Cash Flow
 
-- rvest
-- writexl
-- dplyr
-- tidyverse
-- janitor
-- hablar
+The data is cleaned, numeric strings are converted, and the result is saved as an Excel file with 3 sheets:
+- IS — Income Statement
+- BS — Balance Sheet
+- Cashflow — Cash Flow
 
-You can install them with:
+Trigger Script:
+- Trigger.R defines the ticker variable and runs finscrape(ticker)
 
-install.packages(c("rvest", "writexl", "dplyr", "tidyverse", "janitor", "hablar"))
+##. SA_Scraper.R
 
-## How to Use
+Scrapes financial data from StockAnalysis.com for a given ticker listed on the London Stock Exchange.
 
-1. Set the ticker in Trigger.R
+Statements scraped:
+- Income Statement
+- Balance Sheet
+- Cash Flow Statement
+- Ratios
 
-Example:
-ticker <- "BATS.LN"
+The data is:
+- Extracted from HTML tables
+- Cleaned of $, %, and commas
+- Converted to numeric format where applicable
+
+Saved in:
+Data/SA/<TICKER>_financials.xlsx  
+with sheets:
+- income-statement
+- balance-sheet
+- cash-flow-statement
+- ratios
+
+------------------------------------------------------------
+Requirements
+------------------------------------------------------------
+
+You need the following R packages installed:
+
+rvest  
+dplyr  
+tidyverse  
+writexl  
+janitor  
+hablar  
+openxlsx
+
+Install them with:
+
+install.packages(c("rvest", "dplyr", "tidyverse", "writexl", "janitor", "hablar", "openxlsx"))
+
+------------------------------------------------------------
+Usage
+------------------------------------------------------------
+
+Barchart Scraper:
+1. Set the ticker in Trigger.R, e.g.
+   ticker <- "BATS.LN"
 
 2. Run Trigger.R
 
-This will call:
-finscrape(ticker)
+3. The output will be saved in:
+   Data/BATS.LN.xlsx
 
-3. Check the Data/ folder
+StockAnalysis Scraper:
+1. Set the ticker in StockAnalysis_Scraper.R, e.g.
+   ticker <- "AIR"
 
-An Excel file named <ticker>.xlsx will be saved, containing:
-- IS → Income Statement
-- BS → Balance Sheet
-- Cashflow → Cash Flow Statement
+2. Run the script
 
-## Notes
+3. The output will be saved in:
+   Data/SA/AIR_financials.xlsx
 
-- The script includes a Sys.sleep(3) pause between page requests to avoid overloading the website.
-- The loop stops automatically when no more table data is found.
-- Cash flow data is filtered to exclude rows below Free Cash Flow.
+------------------------------------------------------------
+Notes
+------------------------------------------------------------
+
+- Both scripts include a Sys.sleep(3) delay between requests to avoid IP bans
+- Barchart scraping stops automatically if no table is found
+- StockAnalysis scrapes a single page per section (no pagination)
+- StockAnalysis uses more complete balance sheet data in some cases
+- Barchart requires tickers like "BATS.LN", while StockAnalysis uses base ticker like "AIR"

@@ -1,4 +1,7 @@
 
-ticker <- "BATS.LN"
+ticker <- "SHEL"
 
 source("Main_Script.R")
+
+
+
