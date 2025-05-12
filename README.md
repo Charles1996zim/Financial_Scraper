@@ -11,7 +11,7 @@ Each script saves the results in Excel format with separate sheets for each stat
 Scripts
 ------------------------------------------------------------
 
-##. Main_Script.R
+## Main_Script.R
 
 Scrapes financial data from Barchart.com for a given ticker.
 
@@ -27,7 +27,7 @@ The data is cleaned, numeric strings are converted, and the result is saved as a
 Trigger Script:
 - Trigger.R defines the ticker variable and runs finscrape(ticker)
 
-##. SA_Scraper.R
+## SA_Scraper.R
 
 Scrapes financial data from StockAnalysis.com for a given ticker listed on the London Stock Exchange.
 
